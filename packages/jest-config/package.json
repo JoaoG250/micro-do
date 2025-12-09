@@ -1,0 +1,13 @@
+{
+  "name": "@repo/jest-config",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./base": "./base.ts",
+    "./nest-js": "./nest.ts"
+  },
+  "dependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.0"
+  }
+}
