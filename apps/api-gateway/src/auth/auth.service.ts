@@ -4,6 +4,7 @@ import { firstValueFrom } from "rxjs";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "@repo/db";
 import { RABBITMQ_CLIENTS } from "@repo/common/constants";
+import { JwtPayload } from "@repo/common/types/auth";
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -32,8 +33,12 @@ export class AuthService implements OnModuleInit {
     );
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+  async login(user: User) {
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      name: user.username,
+    };
     return {
       accessToken: this.jwtService.sign(payload),
     };

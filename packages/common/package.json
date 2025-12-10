@@ -4,7 +4,8 @@
   "private": true,
   "exports": {
     "./constants": "./dist/src/constants.js",
-    "./dto/auth": "./dist/src/dto/auth/index.js"
+    "./dto/auth": "./dist/src/dto/auth/index.js",
+    "./types/auth": "./dist/src/types/auth/index.js"
   },
   "scripts": {
     "build": "tsc",

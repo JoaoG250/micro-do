@@ -15,6 +15,8 @@ import {
   RegisterResponse,
   LoginResponse,
 } from "@repo/common/dto/auth";
+import type { HttpRequest } from "src/types";
+import type { AuthUser } from "@repo/common/types/auth";
 
 @Controller("auth")
 export class AuthController {
@@ -40,7 +42,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard("jwt"))
   @Get("profile")
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: HttpRequest): AuthUser {
     return req.user;
   }
 }

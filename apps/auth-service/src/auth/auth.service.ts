@@ -11,15 +11,10 @@ export class AuthService {
     private userRepository: Repository<User>,
   ) {}
 
-  async validateUser(
-    email: string,
-    pass: string,
-  ): Promise<Omit<User, "passwordHash"> | null> {
+  async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
-      const { passwordHash, ...result } = user;
-      void passwordHash;
-      return result;
+      return user;
     }
     return null;
   }
