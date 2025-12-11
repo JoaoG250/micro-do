@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Transport, MicroserviceOptions } from "@nestjs/microservices";
 import { AppModule } from "./app.module";
@@ -21,6 +22,7 @@ async function bootstrap() {
       },
     },
   );
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen();
 }
 void bootstrap();

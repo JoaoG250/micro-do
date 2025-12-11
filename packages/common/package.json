@@ -4,8 +4,9 @@
   "private": true,
   "exports": {
     "./constants": "./dist/src/constants.js",
+    "./types/auth": "./dist/src/types/auth/index.js",
     "./dto/auth": "./dist/src/dto/auth/index.js",
-    "./types/auth": "./dist/src/types/auth/index.js"
+    "./dto/auth-rpc": "./dist/src/dto/auth-rpc/index.js"
   },
   "scripts": {
     "build": "tsc",

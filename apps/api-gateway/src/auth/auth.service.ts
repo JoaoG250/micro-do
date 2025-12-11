@@ -9,6 +9,10 @@ import {
   REFRESH_TOKEN_COOKIE_NAME,
 } from "@repo/common/constants";
 import { AuthUser, JwtPayload } from "@repo/common/types/auth";
+import {
+  RpcCreateUserDto,
+  RpcValidateUserDto,
+} from "@repo/common/dto/auth-rpc";
 import { ConfigKeys } from "../config.schema";
 
 @Injectable()
@@ -34,8 +38,12 @@ export class AuthService implements OnModuleInit {
   }
 
   async validateUser(email: string, pass: string): Promise<User | null> {
+    const payload: RpcValidateUserDto = { email, pass };
     return firstValueFrom(
-      this.client.send<User | null>("auth.validate_user", { email, pass }),
+      this.client.send<User | null, RpcValidateUserDto>(
+        "auth.validate_user",
+        payload,
+      ),
     );
   }
 
@@ -44,8 +52,9 @@ export class AuthService implements OnModuleInit {
     email: string,
     pass: string,
   ): Promise<User> {
+    const payload: RpcCreateUserDto = { username, email, pass };
     return firstValueFrom(
-      this.client.send<User>("auth.create_user", { username, email, pass }),
+      this.client.send<User, RpcCreateUserDto>("auth.create_user", payload),
     );
   }
 
