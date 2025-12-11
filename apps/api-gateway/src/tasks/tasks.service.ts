@@ -20,6 +20,7 @@ import {
   UpdateTaskRpcDto,
 } from "@repo/common/dto/tasks-rpc";
 import { RABBITMQ_CLIENTS, RPC_TASK_PATTERNS } from "@repo/common/constants";
+import { Task } from "@repo/db";
 
 @Injectable()
 export class TasksService {
@@ -28,10 +29,10 @@ export class TasksService {
     private readonly client: ClientProxy,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<TaskResponse> {
+  async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const payload: CreateTaskRpcDto = { ...createTaskDto };
     return firstValueFrom(
-      this.client.send<TaskResponse, CreateTaskRpcDto>(
+      this.client.send<Task, CreateTaskRpcDto>(
         RPC_TASK_PATTERNS.CREATE_TASK,
         payload,
       ),
@@ -40,21 +41,21 @@ export class TasksService {
 
   async findAll(
     query: ListTasksRpcDto,
-  ): Promise<{ tasks: TaskResponse[]; total: number }> {
+  ): Promise<{ tasks: Task[]; total: number }> {
     return firstValueFrom(
-      this.client.send<
-        { tasks: TaskResponse[]; total: number },
-        ListTasksRpcDto
-      >(RPC_TASK_PATTERNS.LIST_TASKS, query),
+      this.client.send<{ tasks: Task[]; total: number }, ListTasksRpcDto>(
+        RPC_TASK_PATTERNS.LIST_TASKS,
+        query,
+      ),
     );
   }
 
-  async update(id: string, dto: UpdateTaskDto): Promise<TaskResponse> {
+  async update(id: string, dto: UpdateTaskDto): Promise<Task> {
     const payload: UpdateTaskRpcDto = { ...dto };
     return firstValueFrom(
       this.client
         .send<
-          TaskResponse,
+          Task,
           { id: string; dto: UpdateTaskRpcDto }
         >(RPC_TASK_PATTERNS.UPDATE_TASK, { id, dto: payload })
         .pipe(
@@ -85,7 +86,7 @@ export class TasksService {
     taskId: string,
     createCommentDto: CreateCommentDto,
     authorId: string,
-  ): Promise<CommentResponse> {
+  ): Promise<Comment> {
     const payload: CreateCommentRpcDto = {
       ...createCommentDto,
       taskId,
@@ -94,7 +95,7 @@ export class TasksService {
     return firstValueFrom(
       this.client
         .send<
-          CommentResponse,
+          Comment,
           CreateCommentRpcDto
         >(RPC_TASK_PATTERNS.CREATE_COMMENT, payload)
         .pipe(
@@ -108,9 +109,9 @@ export class TasksService {
     );
   }
 
-  async findAllComments(taskId: string): Promise<CommentResponse[]> {
+  async findAllComments(taskId: string): Promise<Comment[]> {
     return firstValueFrom(
-      this.client.send<CommentResponse[], string>(
+      this.client.send<Comment[], string>(
         RPC_TASK_PATTERNS.LIST_COMMENTS,
         taskId,
       ),

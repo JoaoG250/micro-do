@@ -12,6 +12,7 @@ import {
   HttpStatus,
   HttpCode,
 } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
 import { AuthGuard } from "@nestjs/passport";
 import {
   CreateTaskDto,
@@ -31,14 +32,23 @@ export class TasksController {
 
   @Post()
   async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskResponse> {
-    return this.tasksService.create(createTaskDto);
+    const task = await this.tasksService.create(createTaskDto);
+    return plainToInstance(TaskResponse, task, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get()
   async findAll(
     @Query() query: ListTasksRpcDto,
   ): Promise<{ tasks: TaskResponse[]; total: number }> {
-    return this.tasksService.findAll(query);
+    const { tasks, total } = await this.tasksService.findAll(query);
+    return {
+      tasks: plainToInstance(TaskResponse, tasks, {
+        excludeExtraneousValues: true,
+      }),
+      total,
+    };
   }
 
   @Put(":id")
@@ -46,7 +56,10 @@ export class TasksController {
     @Param("id") id: string,
     @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<TaskResponse> {
-    return this.tasksService.update(id, updateTaskDto);
+    const task = await this.tasksService.update(id, updateTaskDto);
+    return plainToInstance(TaskResponse, task, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Delete(":id")
@@ -61,17 +74,23 @@ export class TasksController {
     @Body() createCommentDto: CreateCommentDto,
     @Request() req: HttpRequest,
   ): Promise<CommentResponse> {
-    return this.tasksService.createComment(
+    const comment = await this.tasksService.createComment(
       taskId,
       createCommentDto,
       req.user.id,
     );
+    return plainToInstance(CommentResponse, comment, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get(":id/comments")
   async findAllComments(
     @Param("id") taskId: string,
   ): Promise<CommentResponse[]> {
-    return this.tasksService.findAllComments(taskId);
+    const comments = await this.tasksService.findAllComments(taskId);
+    return plainToInstance(CommentResponse, comments, {
+      excludeExtraneousValues: true,
+    });
   }
 }

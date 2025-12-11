@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    container_name: web
+    container_name: jungle-do-web-1
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
@@ -17,7 +17,7 @@ services:
       - NODE_ENV=development
 
   api-gateway:
-    container_name: api-gateway
+    container_name: jungle-do-api-gateway-1
     build:
       context: .
       dockerfile: ./apps/api-gateway/Dockerfile
@@ -42,7 +42,7 @@ services:
       - jungle-do-network
 
   auth-service:
-    container_name: auth-service
+    container_name: jungle-do-auth-service-1
     build:
       context: .
       dockerfile: ./apps/auth-service/Dockerfile
@@ -67,7 +67,7 @@ services:
       - jungle-do-network
 
   tasks-service:
-    container_name: tasks-service
+    container_name: jungle-do-tasks-service-1
     build:
       context: .
       dockerfile: ./apps/tasks-service/Dockerfile
@@ -92,7 +92,7 @@ services:
       - jungle-do-network
 
   notifications-service:
-    container_name: notifications-service
+    container_name: jungle-do-notifications-service-1
     build:
       context: .
       dockerfile: ./apps/notifications-service/Dockerfile
@@ -116,7 +116,7 @@ services:
 
   db:
     image: postgres:18-alpine3.23
-    container_name: db
+    container_name: jungle-do-db-1
     attach: false
     ports:
       - "5432:5432"
@@ -130,7 +130,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:4.1.6-management-alpine
-    container_name: rabbitmq
+    container_name: jungle-do-rabbitmq-1
     attach: false
     restart: always
     ports:

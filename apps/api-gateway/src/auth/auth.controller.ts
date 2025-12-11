@@ -18,10 +18,12 @@ import {
   LoginDto,
   RegisterResponse,
   LoginResponse,
+  UserResponse,
 } from "@repo/common/dto/auth";
 import type { HttpRequest } from "src/types";
 import type { AuthUser } from "@repo/common/types/auth";
 import { REFRESH_TOKEN_COOKIE_NAME } from "@repo/common/constants";
+import { plainToInstance } from "class-transformer";
 
 @Controller("auth")
 export class AuthController {
@@ -29,11 +31,14 @@ export class AuthController {
 
   @Post("register")
   async register(@Body() body: CreateUserDto): Promise<RegisterResponse> {
-    return this.authService.createUser(
+    const user = await this.authService.createUser(
       body.username,
       body.email,
       body.password,
     );
+    return plainToInstance(RegisterResponse, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Post("login")
@@ -48,7 +53,11 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.login(user);
     const cookie = this.authService.getCookieWithJwtRefreshToken(refreshToken);
     res.setHeader("Set-Cookie", cookie);
-    return { accessToken };
+    return plainToInstance(
+      LoginResponse,
+      { accessToken },
+      { excludeExtraneousValues: true },
+    );
   }
 
   @Post("refresh")
@@ -67,7 +76,11 @@ export class AuthController {
       username: payload.username,
     };
     const { accessToken } = await this.authService.login(user);
-    return { accessToken };
+    return plainToInstance(
+      LoginResponse,
+      { accessToken },
+      { excludeExtraneousValues: true },
+    );
   }
 
   @Post("logout")
@@ -79,7 +92,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard("jwt"))
   @Get("profile")
-  getProfile(@Request() req: HttpRequest): AuthUser {
-    return req.user;
+  getProfile(@Request() req: HttpRequest): UserResponse {
+    return plainToInstance(UserResponse, req.user, {
+      excludeExtraneousValues: true,
+    });
   }
 }
