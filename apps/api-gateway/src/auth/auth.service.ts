@@ -7,6 +7,7 @@ import { User } from "@repo/db";
 import {
   RABBITMQ_CLIENTS,
   REFRESH_TOKEN_COOKIE_NAME,
+  RPC_AUTH_PATTERNS,
 } from "@repo/common/constants";
 import { AuthUser, JwtPayload } from "@repo/common/types/auth";
 import {
@@ -41,7 +42,7 @@ export class AuthService implements OnModuleInit {
     const payload: RpcValidateUserDto = { email, pass };
     return firstValueFrom(
       this.client.send<User | null, RpcValidateUserDto>(
-        "auth.validate_user",
+        RPC_AUTH_PATTERNS.VALIDATE_USER,
         payload,
       ),
     );
@@ -54,7 +55,10 @@ export class AuthService implements OnModuleInit {
   ): Promise<User> {
     const payload: RpcCreateUserDto = { username, email, pass };
     return firstValueFrom(
-      this.client.send<User, RpcCreateUserDto>("auth.create_user", payload),
+      this.client.send<User, RpcCreateUserDto>(
+        RPC_AUTH_PATTERNS.CREATE_USER,
+        payload,
+      ),
     );
   }
 

@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import { RABBITMQ_QUEUES } from "@repo/common/constants";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Transport, MicroserviceOptions } from "@nestjs/microservices";
@@ -15,7 +16,7 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: [configService.get<string>(ConfigKeys.RABBITMQ_URL)],
-        queue: "auth_queue",
+        queue: RABBITMQ_QUEUES.AUTH_QUEUE,
         queueOptions: {
           durable: false,
         },

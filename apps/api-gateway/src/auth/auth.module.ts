@@ -5,7 +5,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "./jwt.strategy";
 import { ClientsModule, Transport } from "@nestjs/microservices";
-import { RABBITMQ_CLIENTS } from "@repo/common/constants";
+import { RABBITMQ_CLIENTS, RABBITMQ_QUEUES } from "@repo/common/constants";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ConfigKeys } from "src/config.schema";
 
@@ -30,7 +30,7 @@ import { ConfigKeys } from "src/config.schema";
           transport: Transport.RMQ,
           options: {
             urls: [configService.get<string>(ConfigKeys.RABBITMQ_URL)],
-            queue: "auth_queue",
+            queue: RABBITMQ_QUEUES.AUTH_QUEUE,
             queueOptions: {
               durable: false,
             },
