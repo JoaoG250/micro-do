@@ -3,8 +3,6 @@ import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 import { validationSchema } from "./config.schema";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 
 import { AuthModule } from "./auth/auth.module";
 import { TasksModule } from "./tasks/tasks.module";
@@ -26,9 +24,7 @@ import { NotificationsModule } from "./notifications/notifications.module";
     TasksModule,
     NotificationsModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
