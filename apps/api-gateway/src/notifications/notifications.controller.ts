@@ -1,5 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { EventPattern, Payload } from "@nestjs/microservices";
+import { ApiExcludeController } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
 import { NotificationResponse } from "@repo/common/dto/notifications";
 import {
@@ -11,6 +12,7 @@ import {
 import { NotificationsGateway } from "./notifications.gateway";
 import { Notification } from "@repo/db";
 
+@ApiExcludeController()
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsGateway: NotificationsGateway) {}
