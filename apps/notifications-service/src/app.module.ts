@@ -3,7 +3,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { validationSchema, ConfigKeys } from "./config.schema";
-import { Notification, Task, Comment, User } from "@repo/db";
+import { Notification, Task, Comment, User, AuditLog } from "@repo/db";
+import { join, dirname } from "path";
 
 @Module({
   imports: [
@@ -20,8 +21,15 @@ import { Notification, Task, Comment, User } from "@repo/db";
         username: configService.get<string>(ConfigKeys.POSTGRES_USER),
         password: configService.get<string>(ConfigKeys.POSTGRES_PASSWORD),
         database: configService.get<string>(ConfigKeys.POSTGRES_DB),
-        entities: [Notification, Task, Comment, User],
-        synchronize: true,
+        entities: [Notification, Task, Comment, User, AuditLog],
+        synchronize: false,
+        migrationsRun: true,
+        migrations: [
+          join(
+            dirname(require.resolve("@repo/db/package.json")),
+            "dist/migrations/*.js",
+          ),
+        ],
       }),
       inject: [ConfigService],
     }),

@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User, Task, Comment } from "@repo/db";
+import { User, Task, Comment, AuditLog } from "@repo/db";
 import { AuthModule } from "./auth/auth.module";
 import { validationSchema, ConfigKeys } from "./config.schema";
+import { join, dirname } from "path";
 
 @Module({
   imports: [
@@ -20,8 +21,15 @@ import { validationSchema, ConfigKeys } from "./config.schema";
         username: configService.get<string>(ConfigKeys.POSTGRES_USER),
         password: configService.get<string>(ConfigKeys.POSTGRES_PASSWORD),
         database: configService.get<string>(ConfigKeys.POSTGRES_DB),
-        entities: [User, Task, Comment],
-        synchronize: true,
+        entities: [User, Task, Comment, AuditLog],
+        synchronize: false,
+        migrationsRun: true,
+        migrations: [
+          join(
+            dirname(require.resolve("@repo/db/package.json")),
+            "dist/migrations/*.js",
+          ),
+        ],
       }),
       inject: [ConfigService],
     }),

@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TasksModule } from "./tasks/tasks.module";
 import { validationSchema, ConfigKeys } from "./config.schema";
 import { Task, Comment, User, AuditLog } from "@repo/db";
+import { join, dirname } from "path";
 
 @Module({
   imports: [
@@ -21,7 +22,14 @@ import { Task, Comment, User, AuditLog } from "@repo/db";
         password: configService.get<string>(ConfigKeys.POSTGRES_PASSWORD),
         database: configService.get<string>(ConfigKeys.POSTGRES_DB),
         entities: [Task, Comment, User, AuditLog],
-        synchronize: true,
+        synchronize: false,
+        migrationsRun: true,
+        migrations: [
+          join(
+            dirname(require.resolve("@repo/db/package.json")),
+            "dist/migrations/*.js",
+          ),
+        ],
       }),
       inject: [ConfigService],
     }),
