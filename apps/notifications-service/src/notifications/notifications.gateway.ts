@@ -6,6 +6,7 @@ import {
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  WsException,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Injectable } from "@nestjs/common";
@@ -20,6 +21,12 @@ export class NotificationsGateway
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
+
+    client.onAny((event) => {
+      if (event !== "join") {
+        client.emit("exception", { status: "error", message: "Forbidden" });
+      }
+    });
   }
 
   handleDisconnect(client: Socket) {
@@ -27,15 +34,26 @@ export class NotificationsGateway
   }
 
   @SubscribeMessage("join")
-  handleJoinRoom(
+  async handleJoinRoom(
     @MessageBody() userId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    client.join(`user_${userId}`);
-    console.log(`Client ${client.id} joined room user_${userId}`);
+    const roomName = this.getUserRoom(userId);
+    const roomSize = this.server.sockets.adapter.rooms.get(roomName)?.size || 0;
+
+    if (roomSize >= 3) {
+      throw new WsException("Forbidden");
+    }
+
+    await client.join(roomName);
+    console.log(`Client ${client.id} joined room ${roomName}`);
+  }
+
+  private getUserRoom(userId: string) {
+    return `user_${userId}`;
   }
 
   notifyUser(userId: string, event: string, payload: any) {
-    this.server.to(`user_${userId}`).emit(event, payload);
+    this.server.to(this.getUserRoom(userId)).emit(event, payload);
   }
 }

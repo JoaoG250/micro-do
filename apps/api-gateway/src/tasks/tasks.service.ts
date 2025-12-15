@@ -10,8 +10,6 @@ import {
   CreateTaskDto,
   UpdateTaskDto,
   CreateCommentDto,
-  TaskResponse,
-  CommentResponse,
 } from "@repo/common/dto/tasks";
 import {
   CreateTaskRpcDto,
