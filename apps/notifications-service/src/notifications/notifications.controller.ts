@@ -2,24 +2,28 @@ import { Controller } from "@nestjs/common";
 import { EventPattern, Payload } from "@nestjs/microservices";
 import { NotificationsService } from "./notifications.service";
 import { RPC_NOTIFICATION_PATTERNS } from "@repo/common/constants";
-import { Task, Comment } from "@repo/db";
+import {
+  TaskCreatedRpcDto,
+  TaskUpdatedRpcDto,
+  CommentCreatedRpcDto,
+} from "@repo/common/dto/notifications-rpc";
 
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @EventPattern(RPC_NOTIFICATION_PATTERNS.TASK_CREATED)
-  handleTaskCreated(@Payload() task: Task) {
-    return this.notificationsService.handleTaskCreated(task);
+  handleTaskCreated(@Payload() payload: TaskCreatedRpcDto) {
+    return this.notificationsService.handleTaskCreated(payload);
   }
 
   @EventPattern(RPC_NOTIFICATION_PATTERNS.TASK_UPDATED)
-  handleTaskUpdated(@Payload() task: Task) {
-    return this.notificationsService.handleTaskUpdated(task);
+  handleTaskUpdated(@Payload() payload: TaskUpdatedRpcDto) {
+    return this.notificationsService.handleTaskUpdated(payload);
   }
 
   @EventPattern(RPC_NOTIFICATION_PATTERNS.COMMENT_CREATED)
-  handleCommentCreated(@Payload() comment: Comment) {
-    return this.notificationsService.handleCommentCreated(comment);
+  handleCommentCreated(@Payload() payload: CommentCreatedRpcDto) {
+    return this.notificationsService.handleCommentCreated(payload);
   }
 }

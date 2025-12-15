@@ -1,8 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { validationSchema, ConfigKeys } from "./config.schema";
 import { Notification, Task, Comment, User } from "@repo/db";
@@ -29,7 +27,5 @@ import { Notification, Task, Comment, User } from "@repo/db";
     }),
     NotificationsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

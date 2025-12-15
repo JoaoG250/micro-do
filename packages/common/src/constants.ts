@@ -2,12 +2,14 @@ export const RABBITMQ_CLIENTS = {
   AUTH_SERVICE: "AUTH_SERVICE",
   TASKS_SERVICE: "TASKS_SERVICE",
   NOTIFICATIONS_SERVICE: "NOTIFICATIONS_SERVICE",
+  API_GATEWAY: "API_GATEWAY",
 } as const;
 
 export const RABBITMQ_QUEUES = {
   AUTH_QUEUE: "auth_queue",
   TASKS_QUEUE: "tasks_queue",
   NOTIFICATIONS_QUEUE: "notifications_queue",
+  API_GATEWAY_QUEUE: "api_gateway_queue",
 } as const;
 
 export const RPC_AUTH_PATTERNS = {
@@ -28,6 +30,10 @@ export const RPC_NOTIFICATION_PATTERNS = {
   TASK_CREATED: "task.created",
   TASK_UPDATED: "task.updated",
   COMMENT_CREATED: "comment.created",
+} as const;
+
+export const RPC_API_GATEWAY_PATTERNS = {
+  NOTIFICATION_CREATED: "api_gateway.notification.created",
 } as const;
 
 export const PRIORITY = {

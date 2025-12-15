@@ -13,6 +13,12 @@ import {
   CreateCommentRpcDto,
   ListTasksRpcDto,
 } from "@repo/common/dto/tasks-rpc";
+import {
+  TaskCreatedRpcDto,
+  TaskUpdatedRpcDto,
+  CommentCreatedRpcDto,
+} from "@repo/common/dto/notifications-rpc";
+import { plainToInstance } from "class-transformer";
 
 @Injectable()
 export class TasksService {
@@ -34,7 +40,10 @@ export class TasksService {
       assignees: assigneeIds?.map((id) => ({ id })) || [],
     });
     const savedTask = await this.taskRepository.save(task);
-    this.client.emit(RPC_NOTIFICATION_PATTERNS.TASK_CREATED, savedTask);
+    const eventPayload = plainToInstance(TaskCreatedRpcDto, savedTask, {
+      excludeExtraneousValues: true,
+    });
+    this.client.emit(RPC_NOTIFICATION_PATTERNS.TASK_CREATED, eventPayload);
     return savedTask;
   }
 
@@ -102,7 +111,10 @@ export class TasksService {
       });
     }
     const savedTask = await this.taskRepository.save(task);
-    this.client.emit(RPC_NOTIFICATION_PATTERNS.TASK_UPDATED, savedTask);
+    const eventPayload = plainToInstance(TaskUpdatedRpcDto, savedTask, {
+      excludeExtraneousValues: true,
+    });
+    this.client.emit(RPC_NOTIFICATION_PATTERNS.TASK_UPDATED, eventPayload);
     return savedTask;
   }
 
@@ -146,7 +158,10 @@ export class TasksService {
       task: { id: taskId },
     });
     const savedComment = await this.commentRepository.save(comment);
-    this.client.emit(RPC_NOTIFICATION_PATTERNS.COMMENT_CREATED, savedComment);
+    const eventPayload = plainToInstance(CommentCreatedRpcDto, savedComment, {
+      excludeExtraneousValues: true,
+    });
+    this.client.emit(RPC_NOTIFICATION_PATTERNS.COMMENT_CREATED, eventPayload);
     return savedComment;
   }
 

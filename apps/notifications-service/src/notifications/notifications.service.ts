@@ -1,13 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ClientProxy } from "@nestjs/microservices";
 import { Repository } from "typeorm";
 import { Notification, Task, Comment } from "@repo/db";
-import { NotificationsGateway } from "./notifications.gateway";
 import {
   NOTIFICATION_TYPE,
   NotificationType,
-  WEBSOCKET_EVENTS,
+  RABBITMQ_CLIENTS,
+  RPC_API_GATEWAY_PATTERNS,
 } from "@repo/common/constants";
+import {
+  CommentCreatedRpcDto,
+  TaskCreatedRpcDto,
+  TaskUpdatedRpcDto,
+} from "@repo/common/dto/notifications-rpc";
 
 @Injectable()
 export class NotificationsService {
@@ -16,49 +22,50 @@ export class NotificationsService {
     private readonly notificationRepository: Repository<Notification>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
-    private readonly notificationsGateway: NotificationsGateway,
+    @Inject(RABBITMQ_CLIENTS.API_GATEWAY)
+    private readonly client: ClientProxy,
   ) {}
 
-  async handleTaskCreated(task: Task) {
-    if (task.assignees && task.assignees.length > 0) {
-      for (const assignee of task.assignees) {
+  async handleTaskCreated(taskCreatedDto: TaskCreatedRpcDto) {
+    if (taskCreatedDto.assignees && taskCreatedDto.assignees.length > 0) {
+      for (const assignee of taskCreatedDto.assignees) {
         await this.createAndSendNotification(
           assignee.id,
-          `You have been assigned to task: ${task.title}`,
+          `You have been assigned to task: ${taskCreatedDto.title}`,
           NOTIFICATION_TYPE.TASK_ASSIGNED,
-          { taskId: task.id },
+          { taskId: taskCreatedDto.id },
         );
       }
     }
   }
 
-  async handleTaskUpdated(task: Task) {
-    if (task.assignees && task.assignees.length > 0) {
-      for (const assignee of task.assignees) {
+  async handleTaskUpdated(taskUpdatedDto: TaskUpdatedRpcDto) {
+    if (taskUpdatedDto.assignees && taskUpdatedDto.assignees.length > 0) {
+      for (const assignee of taskUpdatedDto.assignees) {
         await this.createAndSendNotification(
           assignee.id,
-          `Task updated: ${task.title}`,
+          `Task updated: ${taskUpdatedDto.title}`,
           NOTIFICATION_TYPE.TASK_UPDATED,
-          { taskId: task.id },
+          { taskId: taskUpdatedDto.id },
         );
       }
     }
   }
 
-  async handleCommentCreated(comment: Comment) {
+  async handleCommentCreated(commentCreatedDto: CommentCreatedRpcDto) {
     const task = await this.taskRepository.findOne({
-      where: { id: comment.taskId },
+      where: { id: commentCreatedDto.taskId },
       relations: ["assignees"],
     });
 
     if (task && task.assignees && task.assignees.length > 0) {
       for (const assignee of task.assignees) {
-        if (assignee.id !== comment.authorId) {
+        if (assignee.id !== commentCreatedDto.authorId) {
           await this.createAndSendNotification(
             assignee.id,
             `New comment on task: ${task.title}`,
             NOTIFICATION_TYPE.COMMENT_CREATED,
-            { taskId: task.id, commentId: comment.id },
+            { taskId: task.id, commentId: commentCreatedDto.id },
           );
         }
       }
@@ -79,23 +86,9 @@ export class NotificationsService {
       isRead: false,
     });
     await this.notificationRepository.save(notification);
-    const event = this.getWebSocketEvent(type);
-    this.notificationsGateway.notifyUser(userId, event, notification);
-  }
-
-  private getWebSocketEvent(type: NotificationType) {
-    let event = "notification";
-    switch (type) {
-      case NOTIFICATION_TYPE.TASK_ASSIGNED:
-        event = WEBSOCKET_EVENTS.TASK_CREATED;
-        break;
-      case NOTIFICATION_TYPE.TASK_UPDATED:
-        event = WEBSOCKET_EVENTS.TASK_UPDATED;
-        break;
-      case NOTIFICATION_TYPE.COMMENT_CREATED:
-        event = WEBSOCKET_EVENTS.COMMENT_NEW;
-        break;
-    }
-    return event;
+    this.client.emit(
+      RPC_API_GATEWAY_PATTERNS.NOTIFICATION_CREATED,
+      notification,
+    );
   }
 }

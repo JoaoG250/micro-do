@@ -94,4 +94,8 @@ export class AuthService implements OnModuleInit {
       return null;
     }
   }
+
+  verifyToken(token: string): JwtPayload {
+    return this.jwtService.verify<JwtPayload>(token);
+  }
 }
