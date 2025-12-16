@@ -3,14 +3,38 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./constants": "./dist/src/constants.js",
-    "./types/auth": "./dist/src/types/auth/index.js",
-    "./dto/auth": "./dist/src/dto/auth/index.js",
-    "./dto/auth-rpc": "./dist/src/dto/auth-rpc/index.js",
-    "./dto/tasks": "./dist/src/dto/tasks/index.js",
-    "./dto/tasks-rpc": "./dist/src/dto/tasks-rpc/index.js",
-    "./dto/notifications": "./dist/src/dto/notifications/index.js",
-    "./dto/notifications-rpc": "./dist/src/dto/notifications-rpc/index.js"
+    "./constants": {
+      "types": "./dist/src/constants.d.ts",
+      "default": "./dist/src/constants.js"
+    },
+    "./types/auth": {
+      "types": "./dist/src/types/auth/index.d.ts",
+      "default": "./dist/src/types/auth/index.js"
+    },
+    "./dto/auth": {
+      "types": "./dist/src/dto/auth/index.d.ts",
+      "default": "./dist/src/dto/auth/index.js"
+    },
+    "./dto/auth-rpc": {
+      "types": "./dist/src/dto/auth-rpc/index.d.ts",
+      "default": "./dist/src/dto/auth-rpc/index.js"
+    },
+    "./dto/tasks": {
+      "types": "./dist/src/dto/tasks/index.d.ts",
+      "default": "./dist/src/dto/tasks/index.js"
+    },
+    "./dto/tasks-rpc": {
+      "types": "./dist/src/dto/tasks-rpc/index.d.ts",
+      "default": "./dist/src/dto/tasks-rpc/index.js"
+    },
+    "./dto/notifications": {
+      "types": "./dist/src/dto/notifications/index.d.ts",
+      "default": "./dist/src/dto/notifications/index.js"
+    },
+    "./dto/notifications-rpc": {
+      "types": "./dist/src/dto/notifications-rpc/index.d.ts",
+      "default": "./dist/src/dto/notifications-rpc/index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
