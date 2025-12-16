@@ -44,8 +44,8 @@ function Index() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Index</h1>
-      <Button onClick={logout}>Logout</Button>
+      <h1 className="text-2xl font-bold mb-4">Início</h1>
+      <Button onClick={logout}>Sair</Button>
     </div>
   );
 }

@@ -48,16 +48,16 @@ function LoginPage() {
       router.navigate({ to: search.redirect || "/" });
     } catch (error) {
       console.error(error);
-      form.setError("root", { message: "Invalid email or password" });
+      form.setError("root", { message: "E-mail ou senha inválidos" });
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>Entrar</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Digite seu e-mail abaixo para entrar na sua conta
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,7 +67,7 @@ function LoginPage() {
             name="email"
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                <FieldLabel htmlFor={field.name}>E-mail</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -84,7 +84,7 @@ function LoginPage() {
             name="password"
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
                 <Input
                   {...field}
                   type="password"
@@ -102,19 +102,19 @@ function LoginPage() {
             </div>
           )}
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Logging in..." : "Login"}
+            {isPending ? "Entrando..." : "Entrar"}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
         <div className="text-sm text-muted-foreground">
-          Don't have an account?{" "}
+          Não tem uma conta?{" "}
           <Link
             to="/register"
             search={{ redirect: search.redirect }}
             className="underline underline-offset-4 hover:text-primary"
           >
-            Register
+            Cadastrar-se
           </Link>
         </div>
       </CardFooter>

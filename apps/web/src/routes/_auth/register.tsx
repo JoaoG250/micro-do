@@ -51,15 +51,15 @@ function RegisterPage() {
       router.navigate({ to: "/login", search: { redirect: search.redirect } });
     } catch (error) {
       console.error(error);
-      form.setError("root", { message: "Registration failed. Try again." });
+      form.setError("root", { message: "Falha no cadastro. Tente novamente." });
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Register</CardTitle>
-        <CardDescription>Create a new account</CardDescription>
+        <CardTitle>Cadastrar-se</CardTitle>
+        <CardDescription>Criar uma nova conta</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -68,7 +68,7 @@ function RegisterPage() {
             name="username"
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>Username</FieldLabel>
+                <FieldLabel htmlFor={field.name}>Nome de usuário</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -77,7 +77,7 @@ function RegisterPage() {
                   aria-invalid={fieldState.invalid}
                 />
                 <FieldDescription>
-                  This is your public display name.
+                  Este é o seu nome de exibição público.
                 </FieldDescription>
                 <FieldError errors={[fieldState.error]} />
               </Field>
@@ -88,7 +88,7 @@ function RegisterPage() {
             name="email"
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                <FieldLabel htmlFor={field.name}>E-mail</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -105,7 +105,7 @@ function RegisterPage() {
             name="password"
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
                 <Input
                   {...field}
                   type="password"
@@ -123,19 +123,19 @@ function RegisterPage() {
             </div>
           )}
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Creating account..." : "Register"}
+            {isPending ? "Criando conta..." : "Cadastrar-se"}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
         <div className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          Já tem uma conta?{" "}
           <Link
             to="/login"
             search={{ redirect: search.redirect }}
             className="underline underline-offset-4 hover:text-primary"
           >
-            Login
+            Entrar
           </Link>
         </div>
       </CardFooter>
