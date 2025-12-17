@@ -6,13 +6,12 @@ import type {
   CommentResponse,
   CreateCommentDto,
 } from "@repo/types/tasks";
+import type { PageResponse } from "@repo/types/pagination";
 
 export const tasksService = {
-  getTasks: async (): Promise<TaskResponse[]> => {
-    const response = await api.get<{ total: number; tasks: TaskResponse[] }>(
-      "/tasks"
-    );
-    return response.data.tasks;
+  getTasks: async (): Promise<PageResponse<TaskResponse>> => {
+    const response = await api.get<PageResponse<TaskResponse>>("/tasks");
+    return response.data;
   },
 
   createTask: async (data: CreateTaskDto): Promise<TaskResponse> => {

@@ -12,7 +12,9 @@ import {
   ListTasksRpcDto,
   CreateCommentRpcDto,
   UpdateTaskRpcDto,
+  ListCommentsRpcDto,
 } from "@repo/common/dto/tasks-rpc";
+import { PageResponse } from "@repo/types/pagination";
 import { RABBITMQ_CLIENTS, RPC_TASK_PATTERNS } from "@repo/common/constants";
 import { Task } from "@repo/db";
 
@@ -32,11 +34,9 @@ export class TasksService {
     );
   }
 
-  async findAll(
-    query: ListTasksRpcDto,
-  ): Promise<{ tasks: Task[]; total: number }> {
+  async findAll(query: ListTasksRpcDto): Promise<PageResponse<Task>> {
     return firstValueFrom(
-      this.client.send<{ tasks: Task[]; total: number }, ListTasksRpcDto>(
+      this.client.send<PageResponse<Task>, ListTasksRpcDto>(
         RPC_TASK_PATTERNS.LIST_TASKS,
         query,
       ),
@@ -101,11 +101,13 @@ export class TasksService {
     );
   }
 
-  async findAllComments(taskId: string): Promise<Comment[]> {
+  async findAllComments(
+    query: ListCommentsRpcDto,
+  ): Promise<PageResponse<Comment>> {
     return firstValueFrom(
-      this.client.send<Comment[], string>(
+      this.client.send<PageResponse<Comment>, ListCommentsRpcDto>(
         RPC_TASK_PATTERNS.LIST_COMMENTS,
-        taskId,
+        query,
       ),
     );
   }

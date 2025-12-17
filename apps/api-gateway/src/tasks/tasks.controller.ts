@@ -25,6 +25,7 @@ import {
 import { ListTasksRpcDto } from "@repo/common/dto/tasks-rpc";
 import { TasksService } from "./tasks.service";
 import type { HttpRequest } from "src/types";
+import { PageResponse } from "@repo/types/pagination";
 
 @ApiBearerAuth()
 @Controller("tasks")
@@ -49,13 +50,14 @@ export class TasksController {
   @Get()
   async findAll(
     @Query() query: ListTasksRpcDto,
-  ): Promise<{ tasks: TaskResponse[]; total: number }> {
-    const { tasks, total } = await this.tasksService.findAll(query);
+  ): Promise<PageResponse<TaskResponse>> {
+    const result = await this.tasksService.findAll(query);
+    const tasks = plainToInstance(TaskResponse, result.content, {
+      excludeExtraneousValues: true,
+    });
     return {
-      tasks: plainToInstance(TaskResponse, tasks, {
-        excludeExtraneousValues: true,
-      }),
-      total,
+      ...result,
+      content: tasks,
     };
   }
 
@@ -99,10 +101,20 @@ export class TasksController {
   @Get(":id/comments")
   async findAllComments(
     @Param("id") taskId: string,
-  ): Promise<CommentResponse[]> {
-    const comments = await this.tasksService.findAllComments(taskId);
-    return plainToInstance(CommentResponse, comments, {
+    @Query("page") page: number = 1,
+    @Query("limit") limit: number = 10,
+  ): Promise<PageResponse<CommentResponse>> {
+    const result = await this.tasksService.findAllComments({
+      taskId,
+      page,
+      limit,
+    });
+    const comments = plainToInstance(CommentResponse, result.content, {
       excludeExtraneousValues: true,
     });
+    return {
+      ...result,
+      content: comments,
+    };
   }
 }

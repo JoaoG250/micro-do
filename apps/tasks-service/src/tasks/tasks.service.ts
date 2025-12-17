@@ -3,6 +3,7 @@ import { RpcException, ClientProxy } from "@nestjs/microservices";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Task, Comment, User } from "@repo/db";
+import { PageResponse } from "@repo/types/pagination";
 import {
   RPC_NOTIFICATION_PATTERNS,
   RABBITMQ_CLIENTS,
@@ -12,6 +13,7 @@ import {
   UpdateTaskRpcDto,
   CreateCommentRpcDto,
   ListTasksRpcDto,
+  ListCommentsRpcDto,
 } from "@repo/common/dto/tasks-rpc";
 import {
   TaskCreatedRpcDto,
@@ -54,9 +56,7 @@ export class TasksService {
     return savedTask;
   }
 
-  async findAll(
-    query: ListTasksRpcDto,
-  ): Promise<{ tasks: Task[]; total: number }> {
+  async findAll(query: ListTasksRpcDto): Promise<PageResponse<Task>> {
     const {
       page = 1,
       limit = 10,
@@ -93,8 +93,17 @@ export class TasksService {
     qb.skip(skip).take(limit).orderBy("task.createdAt", "DESC");
 
     const [tasks, total] = await qb.getManyAndCount();
+    const totalPages = Math.ceil(total / limit);
 
-    return { tasks, total };
+    return {
+      content: tasks,
+      number: page,
+      size: limit,
+      totalElements: total,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrevious: page > 1,
+    };
   }
 
   async findOne(id: string): Promise<Task> {
@@ -174,10 +183,28 @@ export class TasksService {
     return savedComment;
   }
 
-  async findAllComments(taskId: string): Promise<Comment[]> {
-    return this.commentRepository.find({
+  async findAllComments(
+    query: ListCommentsRpcDto,
+  ): Promise<PageResponse<Comment>> {
+    const { taskId, page = 1, limit = 10 } = query;
+    const skip = (page - 1) * limit;
+
+    const [comments, total] = await this.commentRepository.findAndCount({
       where: { taskId },
       order: { createdAt: "ASC" },
+      skip,
+      take: limit,
     });
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      content: comments,
+      number: page,
+      size: limit,
+      totalElements: total,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrevious: page > 1,
+    };
   }
 }

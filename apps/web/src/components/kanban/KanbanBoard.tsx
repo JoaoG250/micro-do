@@ -59,7 +59,7 @@ export function KanbanBoard() {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    const task = tasks?.find((t) => t.id === active.id);
+    const task = tasks?.content.find((t) => t.id === active.id);
     if (task) setActiveTask(task);
   };
 
@@ -74,7 +74,7 @@ export function KanbanBoard() {
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    const task = tasks?.find((t) => t.id === activeId);
+    const task = tasks?.content.find((t) => t.id === activeId);
     if (!task) {
       setActiveTask(null);
       return;
@@ -85,7 +85,7 @@ export function KanbanBoard() {
     if (columns.some((col) => col.id === overId)) {
       newStatus = overId as Status;
     } else {
-      const overTask = tasks?.find((t) => t.id === overId);
+      const overTask = tasks?.content.find((t) => t.id === overId);
       if (overTask) {
         newStatus = overTask.status;
       }
@@ -162,13 +162,13 @@ export function KanbanBoard() {
               <KanbanColumn
                 id={col.id}
                 title={col.title}
-                tasks={tasks?.filter((t) => t.status === col.id) || []}
+                tasks={tasks?.content.filter((t) => t.status === col.id) || []}
                 onEdit={(task) => {
                   setSelectedTask(task);
                   setIsEditOpen(true);
                 }}
                 onDelete={(taskId) => {
-                  const task = tasks?.find((t) => t.id === taskId);
+                  const task = tasks?.content.find((t) => t.id === taskId);
                   if (task) {
                     setSelectedTask(task);
                     setIsDeleteOpen(true);

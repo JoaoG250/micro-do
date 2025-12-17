@@ -7,6 +7,7 @@ import {
   UpdateTaskRpcDto,
   CreateCommentRpcDto,
   ListTasksRpcDto,
+  ListCommentsRpcDto,
 } from "@repo/common/dto/tasks-rpc";
 
 @Controller()
@@ -34,8 +35,8 @@ export class TasksController {
   }
 
   @MessagePattern(RPC_TASK_PATTERNS.LIST_COMMENTS)
-  findAllComments(@Payload() taskId: string) {
-    return this.tasksService.findAllComments(taskId);
+  findAllComments(@Payload() listCommentsDto: ListCommentsRpcDto) {
+    return this.tasksService.findAllComments(listCommentsDto);
   }
 
   @MessagePattern(RPC_TASK_PATTERNS.DELETE_TASK)

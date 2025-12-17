@@ -30,6 +30,7 @@
     "@nestjs/websockets": "^11.1.9",
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/types": "workspace:^",
     "@types/cookie-parser": "^1.4.10",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.3",

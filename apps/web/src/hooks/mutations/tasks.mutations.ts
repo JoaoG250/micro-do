@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tasksService } from "@/services/tasks.service";
 import { taskKeys } from "../queries/tasks.queries";
 import type { TaskResponse, UpdateTaskDto } from "@repo/types/tasks";
+import type { PageResponse } from "@repo/types/pagination";
 import { toast } from "sonner";
 
 export const useCreateTaskMutation = () => {
@@ -28,17 +29,23 @@ export const useUpdateTaskMutation = () => {
     onMutate: async ({ id, data }) => {
       await queryClient.cancelQueries({ queryKey: taskKeys.lists() });
 
-      const previousTasks = queryClient.getQueryData<TaskResponse[]>(
-        taskKeys.lists()
-      );
+      const previousTasks = queryClient.getQueryData<
+        PageResponse<TaskResponse>
+      >(taskKeys.lists());
 
       if (previousTasks) {
-        queryClient.setQueryData<TaskResponse[]>(taskKeys.lists(), (old) => {
-          if (!old) return [];
-          return old.map((task) =>
-            task.id === id ? { ...task, ...data } : task
-          );
-        });
+        queryClient.setQueryData<PageResponse<TaskResponse>>(
+          taskKeys.lists(),
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              content: old.content.map((task) =>
+                task.id === id ? { ...task, ...data } : task
+              ),
+            };
+          }
+        );
       }
 
       return { previousTasks };
