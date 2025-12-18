@@ -55,7 +55,7 @@ export const STATUS = {
 
 export type Status = (typeof STATUS)[keyof typeof STATUS];
 
-export const REFRESH_TOKEN_COOKIE_NAME = "jungle-do.refresh-token";
+export const REFRESH_TOKEN_COOKIE_NAME = "micro-do.refresh-token";
 
 export const NOTIFICATION_TYPE = {
   TASK_ASSIGNED: "TASK_ASSIGNED",

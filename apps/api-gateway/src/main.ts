@@ -38,8 +38,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle("Jungle Do API")
-    .setDescription("Jungle Do API Swagger documentation")
+    .setTitle("Micro Do API")
+    .setDescription("Micro Do API Swagger documentation")
     .setVersion("1.0")
     .addCookieAuth(REFRESH_TOKEN_COOKIE_NAME)
     .addBearerAuth()

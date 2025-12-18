@@ -47,7 +47,7 @@ function Index() {
     <div className="flex flex-col h-screen overflow-hidden">
       <header className="border-b px-6 py-3 flex items-center justify-between bg-card">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">Jungle Do</h1>
+          <h1 className="text-xl font-bold">Micro Do</h1>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="outline" size="sm" onClick={logout}>

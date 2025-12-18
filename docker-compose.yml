@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    container_name: jungle-do-web-1
+    container_name: micro-do-web-1
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
@@ -18,7 +18,7 @@ services:
       - ./dotenv/web.env
 
   api-gateway:
-    container_name: jungle-do-api-gateway-1
+    container_name: micro-do-api-gateway-1
     build:
       context: .
       dockerfile: ./apps/api-gateway/Dockerfile
@@ -39,10 +39,10 @@ services:
       rabbitmq:
         condition: service_healthy
     networks:
-      - jungle-do-network
+      - micro-do-network
 
   auth-service:
-    container_name: jungle-do-auth-service-1
+    container_name: micro-do-auth-service-1
     build:
       context: .
       dockerfile: ./apps/auth-service/Dockerfile
@@ -63,10 +63,10 @@ services:
       rabbitmq:
         condition: service_healthy
     networks:
-      - jungle-do-network
+      - micro-do-network
 
   tasks-service:
-    container_name: jungle-do-tasks-service-1
+    container_name: micro-do-tasks-service-1
     build:
       context: .
       dockerfile: ./apps/tasks-service/Dockerfile
@@ -87,10 +87,10 @@ services:
       rabbitmq:
         condition: service_healthy
     networks:
-      - jungle-do-network
+      - micro-do-network
 
   notifications-service:
-    container_name: jungle-do-notifications-service-1
+    container_name: micro-do-notifications-service-1
     build:
       context: .
       dockerfile: ./apps/notifications-service/Dockerfile
@@ -111,16 +111,16 @@ services:
       rabbitmq:
         condition: service_healthy
     networks:
-      - jungle-do-network
+      - micro-do-network
 
   db:
     image: postgres:18-alpine3.23
-    container_name: jungle-do-db-1
+    container_name: micro-do-db-1
     attach: false
     ports:
       - "5432:5432"
     networks:
-      - jungle-do-network
+      - micro-do-network
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -134,14 +134,14 @@ services:
 
   rabbitmq:
     image: rabbitmq:4.1.6-management-alpine
-    container_name: jungle-do-rabbitmq-1
+    container_name: micro-do-rabbitmq-1
     attach: false
     restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
-      - jungle-do-network
+      - micro-do-network
     env_file:
       - ./dotenv/rabbitmq.env
     volumes:
@@ -159,5 +159,5 @@ volumes:
     driver: local
 
 networks:
-  jungle-do-network:
+  micro-do-network:
     driver: bridge

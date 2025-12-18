@@ -31,4 +31,4 @@ export const WEBSOCKET_EVENTS = {
   COMMENT_NEW: "comment:new",
 } as const;
 
-export const REFRESH_TOKEN_COOKIE_NAME = "jungle-do.refresh-token";
+export const REFRESH_TOKEN_COOKIE_NAME = "micro-do.refresh-token";
