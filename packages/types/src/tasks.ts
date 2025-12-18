@@ -42,10 +42,10 @@ export interface CommentResponse {
 export interface TaskResponse {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   priority: Priority;
   status: Status;
-  dueDate: Date;
+  dueDate: Date | null;
   assigneeIds: string[];
   comments: CommentResponse[];
   createdAt: Date;

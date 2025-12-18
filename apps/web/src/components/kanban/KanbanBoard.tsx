@@ -16,6 +16,7 @@ import { TaskCard } from "./TaskCard";
 import { TaskFilters } from "./TaskFilters";
 import { TaskFormDialog } from "../tasks/TaskFormDialog";
 import { DeleteTaskDialog } from "../tasks/DeleteTaskDialog";
+import { TaskDetailSheet } from "../tasks/TaskDetailSheet";
 import { Button } from "@repo/ui/components/button";
 import { useTasksQuery } from "@/hooks/queries/tasks.queries";
 import {
@@ -51,9 +52,17 @@ export function KanbanBoard() {
 
   const [activeTask, setActiveTask] = useState<TaskResponse | null>(null);
   const [selectedTask, setSelectedTask] = useState<TaskResponse | null>(null);
+  const [selectedTaskDetail, setSelectedTaskDetail] =
+    useState<TaskResponse | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const openTaskDetail = (task: TaskResponse) => {
+    setSelectedTaskDetail(task);
+    setIsDetailOpen(true);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -126,6 +135,12 @@ export function KanbanBoard() {
         onSuccess: () => {
           setIsEditOpen(false);
           setSelectedTask(null);
+          if (selectedTaskDetail?.id === selectedTask.id) {
+            setSelectedTaskDetail({
+              ...selectedTaskDetail,
+              ...data,
+            } as TaskResponse);
+          }
         },
       }
     );
@@ -137,6 +152,10 @@ export function KanbanBoard() {
       onSuccess: () => {
         setIsDeleteOpen(false);
         setSelectedTask(null);
+        if (selectedTaskDetail?.id === selectedTask.id) {
+          setIsDetailOpen(false);
+          setSelectedTaskDetail(null);
+        }
       },
     });
   };
@@ -174,10 +193,7 @@ export function KanbanBoard() {
                 id={col.id}
                 title={col.title}
                 tasks={tasks?.content.filter((t) => t.status === col.id) || []}
-                onEdit={(task) => {
-                  setSelectedTask(task);
-                  setIsEditOpen(true);
-                }}
+                onEdit={openTaskDetail}
                 onDelete={(taskId) => {
                   const task = tasks?.content.find((t) => t.id === taskId);
                   if (task) {
@@ -223,6 +239,23 @@ export function KanbanBoard() {
         }}
         onConfirm={handleDeleteTask}
         isDeleting={deleteTaskMutation.isPending}
+      />
+
+      <TaskDetailSheet
+        task={selectedTaskDetail}
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+        onEdit={(task) => {
+          setSelectedTask(task);
+          setIsEditOpen(true);
+        }}
+        onDelete={(taskId) => {
+          const task = tasks?.content.find((t) => t.id === taskId);
+          if (task) {
+            setSelectedTask(task);
+            setIsDeleteOpen(true);
+          }
+        }}
       />
     </div>
   );

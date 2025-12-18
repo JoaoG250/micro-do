@@ -68,7 +68,10 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Card className="cursor-grab hover:ring-2 hover:ring-primary/20 transition-all">
         <CardHeader className="p-4 space-y-0 flex flex-row items-start justify-between">
-          <CardTitle className="text-sm font-medium leading-none line-clamp-2">
+          <CardTitle
+            className="text-sm font-medium leading-none line-clamp-2 cursor-pointer hover:underline hover:text-primary transition-colors"
+            onClick={() => onEdit(task)}
+          >
             {task.title}
           </CardTitle>
           <DropdownMenu>

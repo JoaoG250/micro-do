@@ -60,4 +60,16 @@ export const tasksService = {
     );
     return response.data;
   },
+
+  getComments: async (
+    taskId: string,
+    page = 1,
+    limit = 50
+  ): Promise<PageResponse<CommentResponse>> => {
+    const response = await api.get<PageResponse<CommentResponse>>(
+      `/tasks/${taskId}/comments`,
+      { params: { page, limit } }
+    );
+    return response.data;
+  },
 };

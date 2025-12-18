@@ -9,6 +9,7 @@ export const taskKeys = {
   list: (filters: TaskFilters) => [...taskKeys.lists(), { filters }] as const,
   details: () => [...taskKeys.all, "detail"] as const,
   detail: (id: string) => [...taskKeys.details(), id] as const,
+  comments: (id: string) => [...taskKeys.detail(id), "comments"] as const,
 };
 
 export const useTasksQuery = (filters?: TaskFilters) => {
@@ -22,6 +23,14 @@ export const useTaskQuery = (id: string) => {
   return useQuery({
     queryKey: taskKeys.detail(id),
     queryFn: () => tasksService.getTask(id),
+    enabled: !!id,
+  });
+};
+
+export const useTaskCommentsQuery = (id: string) => {
+  return useQuery({
+    queryKey: taskKeys.comments(id),
+    queryFn: () => tasksService.getComments(id),
     enabled: !!id,
   });
 };

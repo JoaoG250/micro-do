@@ -64,7 +64,7 @@ export function TaskFormDialog({
     if (task) {
       form.reset({
         title: task.title,
-        description: task.description,
+        description: task.description || "",
         status: task.status,
         priority: task.priority,
         dueDate: task.dueDate ? new Date(task.dueDate) : undefined,

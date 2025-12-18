@@ -76,3 +76,19 @@ export const useDeleteTaskMutation = () => {
     },
   });
 };
+
+export const useCreateCommentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ taskId, content }: { taskId: string; content: string }) =>
+      tasksService.createComment(taskId, { content }),
+    onSuccess: (_, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.comments(taskId) });
+      toast.success("Comentário adicionado com sucesso!");
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar comentário.");
+    },
+  });
+};
