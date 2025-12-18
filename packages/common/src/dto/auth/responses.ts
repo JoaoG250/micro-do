@@ -4,6 +4,7 @@ import type {
   RegisterResponse as IRegisterResponse,
   LoginResponse as ILoginResponse,
   UserResponse as IUserResponse,
+  SearchUserResponse as ISearchUserResponse,
 } from "@repo/types/auth";
 
 @Exclude()
@@ -37,6 +38,17 @@ export class UserResponse implements IUserResponse {
   @ApiProperty()
   @Expose()
   email: string;
+
+  @ApiProperty()
+  @Expose()
+  username: string;
+}
+
+@Exclude()
+export class SearchUserResponse implements ISearchUserResponse {
+  @ApiProperty()
+  @Expose()
+  id: string;
 
   @ApiProperty()
   @Expose()

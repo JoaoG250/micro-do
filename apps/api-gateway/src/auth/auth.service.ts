@@ -9,10 +9,12 @@ import {
   REFRESH_TOKEN_COOKIE_NAME,
   RPC_AUTH_PATTERNS,
 } from "@repo/common/constants";
+import { SearchUserResponse } from "@repo/common/dto/auth";
 import { AuthUser, JwtPayload } from "@repo/common/types/auth";
 import {
   CreateUserRpcDto,
   ValidateUserRpcDto,
+  SearchUsersRpcDto,
 } from "@repo/common/dto/auth-rpc";
 import { ConfigKeys } from "../config.schema";
 
@@ -83,6 +85,16 @@ export class AuthService implements OnModuleInit {
 
   getCookieForLogOut() {
     return `${REFRESH_TOKEN_COOKIE_NAME}=; HttpOnly; Path=/auth/refresh; Max-Age=0`;
+  }
+
+  async searchUsers(search: string): Promise<SearchUserResponse[]> {
+    const payload: SearchUsersRpcDto = { search };
+    return firstValueFrom(
+      this.client.send<SearchUserResponse[]>(
+        RPC_AUTH_PATTERNS.SEARCH_USERS,
+        payload,
+      ),
+    );
   }
 
   async verifyRefreshToken(refreshToken: string): Promise<JwtPayload | null> {

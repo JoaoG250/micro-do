@@ -5,6 +5,7 @@ import type {
   LoginResponse,
   RegisterResponse,
   UserResponse,
+  SearchUserResponse,
 } from "@repo/types/auth";
 
 export const authService = {
@@ -29,6 +30,13 @@ export const authService = {
 
   profile: async (): Promise<UserResponse> => {
     const response = await apiClient.get<UserResponse>("/auth/profile");
+    return response.data;
+  },
+
+  searchUsers: async (search: string): Promise<SearchUserResponse[]> => {
+    const response = await apiClient.get<SearchUserResponse[]>("/auth/users", {
+      params: { search },
+    });
     return response.data;
   },
 };

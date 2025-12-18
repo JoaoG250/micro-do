@@ -25,6 +25,11 @@ export interface UserResponse {
   username: string;
 }
 
+export interface SearchUserResponse {
+  id: string;
+  username: string;
+}
+
 export interface JwtPayload {
   sub: string;
   email: string;

@@ -15,6 +15,7 @@ export const RABBITMQ_QUEUES = {
 export const RPC_AUTH_PATTERNS = {
   VALIDATE_USER: "auth.validate_user",
   CREATE_USER: "auth.create_user",
+  SEARCH_USERS: "auth.search_users",
 } as const;
 
 export const RPC_TASK_PATTERNS = {

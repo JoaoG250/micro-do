@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   Logger,
+  Query,
 } from "@nestjs/common";
 import type { Response } from "express";
 import { AuthService } from "./auth.service";
@@ -20,6 +21,7 @@ import {
   RegisterResponse,
   LoginResponse,
   UserResponse,
+  SearchUserResponse,
 } from "@repo/common/dto/auth";
 import type { HttpRequest } from "src/types";
 import type { AuthUser } from "@repo/common/types/auth";
@@ -100,5 +102,13 @@ export class AuthController {
     return plainToInstance(UserResponse, req.user, {
       excludeExtraneousValues: true,
     });
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("users")
+  async searchUsers(
+    @Query("search") search: string,
+  ): Promise<SearchUserResponse[]> {
+    return this.authService.searchUsers(search || "");
   }
 }
