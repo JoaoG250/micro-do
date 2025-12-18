@@ -5,6 +5,6 @@ export interface NotificationResponse {
   userId: string;
   type: NotificationType;
   message: string;
-  read: boolean;
+  isRead: boolean;
   createdAt: Date;
 }
